@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Section Détails de l'Acte de Naissance -->
+<div class="mb-4">
+    <h2>Détails de l'Acte de Naissance</h2>
+    
+    <!-- Informations sur l'Acte de Naissance -->
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">{{ naissance.nom_enfant }}</h5>
+            <p><strong>Date de naissance:</strong> {{ naissance.date_naissance }}</p>
+            <p><strong>Nom du Père:</strong> {{ naissance.nom_pere }}</p>
+            <p><strong>Nom de la Mère:</strong> {{ naissance.nom_mere }}</p>
+            
+            <p><strong>Lieu de naissance:</strong> {{ naissance.lieu_naissance }}</p>
+            <p><strong>État de l'Acte:</strong> <span class="badge 
+                {% if naissance.etat == 'validé' %}bg-success{% else %}bg-warning{% endif %}">
+                {{ naissance.etat|capfirst }}</span></p>
+        </div>
+    </div>
+    
+    <!-- Bouton Imprimer -->
+    <button class="btn btn-primary mt-4" onclick="window.print();">Imprimer l'Acte</button>
+</div>
+{% endblock %}

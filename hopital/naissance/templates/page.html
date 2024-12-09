@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Gestion des Actes de Naissance</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+    <style>
+        .sidebar {
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            background-color: #343a40;
+            padding-top: 20px;
+        }
+        .sidebar a {
+            color: white;
+            padding: 10px;
+            text-decoration: none;
+            display: block;
+        }
+        .sidebar a:hover {
+            background-color: #575757;
+        }
+        .content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h3 class="text-white text-center">Dashboard</h3>
+            <a href="#">Accueil</a>
+            <a href="#">Gestion des Naissances</a>
+            <a href="#">Gestion des Utilisateurs</a>
+            <a href="#">Rapports</a>
+            <a href="#">Paramètres</a>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1 class="text-center mb-4">Tableau de Bord Principal</h1>
+                        <div class="row">
+                            <!-- Statistiques -->
+                            <div class="col-md-3 mb-3">
+                                <div class="card text-white bg-primary">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Naissances ce mois</h5>
+                                        <p class="card-text">124 Naissances</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="card text-white bg-success">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Actes validés</h5>
+                                        <p class="card-text">80 Actes</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="card text-white bg-danger">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Dossiers en retard</h5>
+                                        <p class="card-text">5 Dossiers</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="card text-white bg-warning">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Notifications</h5>
+                                        <p class="card-text">10 Nouvelles</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Gestion des Naissances -->
+                        <div class="mb-4">
+                            <h2>Gestion des Naissances</h2>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Nom de l'enfant</th>
+                                        <th>Date de naissance</th>
+                                        <th>Nom des parents</th>
+                                        <th>État</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Jean Dupont</td>
+                                        <td>01/11/2024</td>
+                                        <td>Marie et Paul Dupont</td>
+                                        <td>Validé</td>
+                                        <td><button class="btn btn-warning">Voir</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Alice Bernard</td>
+                                        <td>15/11/2024</td>
+                                        <td>Isabelle et Marc Bernard</td>
+                                        <td>En attente</td>
+                                        <td><button class="btn btn-warning">Voir</button></td>
+                                    </tr>
+                                    <!-- Ajouter d'autres lignes selon les données -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Rapport -->
+                        <div class="mb-4">
+                            <h2>Rapport Mensuel</h2>
+                            <p>Taux de natalité : 3.5% par rapport à l'année dernière.</p>
+                            <button class="btn btn-primary">Générer rapport</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

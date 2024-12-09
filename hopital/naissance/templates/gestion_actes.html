@@ -1,0 +1,136 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- Tableau des Actes de Naissance -->
+<div class="mb-4">
+    <h2>Gestion des Actes de Naissance</h2>
+
+    <!-- Tableau des Actes -->
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID Acte</th>
+                <th>Nom de l'Enfant</th>
+                <th>Date de Naissance</th>
+                <th>Statut</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>12345</td>
+                <td>Jean Dupont</td>
+                <td>2024-10-15</td>
+                <td><span class="badge bg-warning">En Attente</span></td>
+                <td>
+                    <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#validateActModal">Valider</button>
+                    <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editActModal">Modifier</button>
+                </td>
+            </tr>
+            <!-- Ajoutez d'autres actes selon les données -->
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal de Validation de l'Acte -->
+<div class="modal fade" id="validateActModal" tabindex="-1" aria-labelledby="validateActModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="validateActModalLabel">Valider l'Acte de Naissance</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>ID Acte:</strong> 12345</p>
+                <p><strong>Nom de l'Enfant:</strong> Jean Dupont</p>
+                <p><strong>Date de Naissance:</strong> 2024-10-15</p>
+                <p><strong>Statut:</strong> En Attente</p>
+                <p>Souhaitez-vous valider cet acte de naissance ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                <button type="button" class="btn btn-success">Valider</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Modification de l'Acte -->
+<div class="modal fade" id="editActModal" tabindex="-1" aria-labelledby="editActModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editActModalLabel">Modifier l'Acte de Naissance</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="childName" class="form-label">Nom de l'Enfant</label>
+                        <input type="text" class="form-control" id="childName" value="Jean Dupont" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="birthDate" class="form-label">Date de Naissance</label>
+                        <input type="date" class="form-control" id="birthDate" value="2024-10-15" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="status" class="form-label">Statut</label>
+                        <select class="form-select" id="status">
+                            <option value="pending" selected>En Attente</option>
+                            <option value="validated">Validé</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                <button type="button" class="btn btn-primary">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ID Acte</th>
+            <th>Nom de l'Enfant</th>
+            <th>Date de Naissance</th>
+            <th>Statut</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for acte in actes %}
+        <tr>
+            <td>{{ acte.id_acte }}</td>
+            <td>{{ acte.nom_enfant }}</td>
+            <td>{{ acte.date_naissance }}</td>
+            <td>
+                <span class="badge {% if acte.statut == 'pending' %}bg-warning{% else %}bg-success{% endif %}">
+                    {{ acte.statut|capfirst }}
+                </span>
+            </td>
+            <td>
+                {% if acte.statut == 'pending' %}
+                    <a href="{% url 'valider_acte' acte.id_acte %}" class="btn btn-info">Valider</a>
+                {% endif %}
+                <a href="{% url 'modifier_acte' acte.id_acte %}" class="btn btn-warning">Modifier</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,162 @@
+<!-- dashboard.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-6 col-lg-3">
+            <div class="card text-white bg-info mb-3">
+                <div class="card-header">Total Actes</div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ total_actes }}</h5>
+                    <p class="card-text">Actes de naissance enregistrés.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="card text-white bg-warning mb-3">
+                <div class="card-header">En Attente</div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ en_attente }}</h5>
+                    <p class="card-text">Actes en attente de validation.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-header">Validés</div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ validés }}</h5>
+                    <p class="card-text">Actes validés et délivrés.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="card text-white bg-danger mb-3">
+                <div class="card-header">Rejetés</div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ rejetés }}</h5>
+                    <p class="card-text">Actes rejetés.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h2>Liste des Actes de Naissance</h2>
+<!-- Tableau des Actes de Naissance -->
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ID Acte</th>
+            <th>Nom de l'Enfant</th>
+            <th>Date de Naissance</th>
+            <th>Statut</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr id="acte-12345">
+            <td>12345</td>
+            <td><span id="child-name-12345">Jean Dupont</span></td>
+            <td><span id="birth-date-12345">2024-10-15</span></td>
+            <td><span id="status-12345" class="badge bg-warning">En Attente</span></td>
+            <td>
+                <button class="btn btn-info" onclick="showEditModal(12345)">Modifier</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+</div>
+
+
+
+<!-- Modal de Modification de l'Acte -->
+<div class="modal fade" id="editActModal" tabindex="-1" aria-labelledby="editActModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editActModalLabel">Modifier l'Acte de Naissance</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="edit-act-form">
+                    <input type="hidden" id="acte-id" value="12345">
+                    <div class="mb-3">
+                        <label for="child-name" class="form-label">Nom de l'Enfant</label>
+                        <input type="text" class="form-control" id="child-name" value="Jean Dupont" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="birth-date" class="form-label">Date de Naissance</label>
+                        <input type="date" class="form-control" id="birth-date" value="2024-10-15" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="status" class="form-label">Statut</label>
+                        <select class="form-select" id="status">
+                            <option value="pending" selected>En Attente</option>
+                            <option value="validated">Validé</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                <button type="button" class="btn btn-primary" id="saveChangesBtn">Enregistrer</button>
+            </div>
+            <div class="mb-4">
+                <h2>Rapport Mensuel</h2>
+                <p>Taux de natalité : 3.5% par rapport à l'année dernière.</p>
+                <button class="btn btn-primary">Générer rapport</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery AJAX pour la mise à jour de l'acte -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    // Affichage du modal d'édition
+    function showEditModal(acteId) {
+        $('#acte-id').val(acteId);
+        $('#child-name').val($('#child-name-' + acteId).text());
+        $('#birth-date').val($('#birth-date-' + acteId).text());
+        $('#status').val($('#status-' + acteId).text() === "En Attente" ? "pending" : "validated");
+        $('#editActModal').modal('show');
+    }
+
+    // Sauvegarder les modifications via AJAX
+    $('#saveChangesBtn').on('click', function() {
+        const acteId = $('#acte-id').val();
+        const childName = $('#child-name').val();
+        const birthDate = $('#birth-date').val();
+        const status = $('#status').val();
+
+        $.ajax({
+            url: '/update_acte/' + acteId + '/',  // URL de la vue Django
+            method: 'POST',
+            data: {
+                statut: status,
+                nom_enfant: childName,
+                date_naissance: birthDate,
+                csrfmiddlewaretoken: '{{ csrf_token }}'  // Assurez-vous d'inclure le token CSRF
+            },
+            success: function(response) {
+                if (response.status === "success") {
+                    // Mise à jour dynamique des informations sans recharger la page
+                    $('#child-name-' + acteId).text(childName);
+                    $('#birth-date-' + acteId).text(birthDate);
+                    $('#status-' + acteId).text(status === "pending" ? "En Attente" : "Validé").toggleClass("bg-warning bg-success");
+                    $('#editActModal').modal('hide');
+                    alert("Acte de naissance mis à jour !");
+                } else {
+                    alert("Erreur de mise à jour.");
+                }
+            },
+            error: function() {
+                alert("Une erreur est survenue.");
+            }
+        });
+    });
+</script>
+
+{% endblock %}

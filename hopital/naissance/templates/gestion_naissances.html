@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="mb-4">
+    <h2>Gestion des Naissances</h2>
+    
+    <!-- Recherche -->
+    <form method="GET" action="" class="mb-3">
+        <div class="input-group">
+            <input type="text" name="search" class="form-control" placeholder="Rechercher par nom, date ou parents" value="{{ request.GET.search }}">
+            <button class="btn btn-outline-secondary" type="submit">Rechercher</button>
+        </div>
+    </form>
+
+    <!-- Tableau des Naissances -->
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Nom de l'enfant</th>
+                <th>Date de naissance</th>
+                <th>Nom des parents</th>
+                <th>État</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for naissance in naissances %}
+            <tr>
+                <td>{{ naissance.nom_enfant }}</td>
+                <td>{{ naissance.date_naissance }}</td>
+                <td>{{ naissance.nom_pere  }}</td>
+                <td><span class="badge {% if naissance.etat == 'validé' %}bg-success{% else %}bg-warning{% endif %}">{{ naissance.etat|capfirst }}</span></td>
+                <td>
+                    <!-- Boutons d'action -->
+                    <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#viewModal{{ naissance.id }}">Voir</button>
+                    <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editActModal">Modifier</button>
+                </td>
+            </tr>
+
+            <!-- Modal de Détails de Naissance -->
+            <div class="modal fade" id="viewModal{{ naissance.id }}" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="viewModalLabel">Détails de l'Acte de Naissance</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p><strong>Nom de l'enfant:</strong> {{ naissance.nom_enfant }}</p>
+                            <p><strong>Date de naissance:</strong> {{ naissance.date_naissance }}</p>
+                            <p><strong>Nom des parents:</strong> {{ naissance.nom_pere }}</p>
+                            <p><strong>Lieu de naissance:</strong> {{ naissance.lieu_naissance }}</p>
+                            <p><strong>Statut:</strong> {{ naissance.etat|capfirst }}</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                            <button type="button" class="btn btn-primary" onclick="imprimerActe({{ naissance.id }})">Imprimer l'Acte</button>
+                        
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal de Modification de l'Acte -->
+<div class="modal fade" id="editActModal" tabindex="-1" aria-labelledby="editActModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editActModalLabel">Modifier l'Acte de Naissance</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="childName" class="form-label">Nom de l'Enfant</label>
+                        <input type="text" class="form-control" id="childName" value="Jean Dupont" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="birthDate" class="form-label">Date de Naissance</label>
+                        <input type="date" class="form-control" id="birthDate" value="2024-10-15" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="status" class="form-label">Statut</label>
+                        <select class="form-select" id="status">
+                            <option value="pending" selected>En Attente</option>
+                            <option value="validated">Validé</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                <button type="button" class="btn btn-primary">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+</div><script>
+    function imprimerActe(naissanceId) {
+        // Créez un élément spécifique de l'acte de naissance à imprimer
+        var printContent = document.getElementById('acte-' + naissanceId).innerHTML;
+        
+        // Ouvre une nouvelle fenêtre pour l'impression
+        var printWindow = window.open('', '', 'height=600,width=800');
+        printWindow.document.write('<html><head><title>Impression de l\'Acte de Naissance</title>');
+        printWindow.document.write('<style>body{font-family: Arial, sans-serif; padding: 20px;} h4 {text-align: center;}</style>');
+        printWindow.document.write('</head><body>');
+        printWindow.document.write(printContent);
+        printWindow.document.write('</body></html>');
+        
+        // Attendre que le contenu soit chargé puis imprimer
+        printWindow.document.close(); // Fermer le document pour permettre l'impression
+        printWindow.print(); // Ouvre la boîte de dialogue d'impression
+    }
+</script>
+
+{% endblock %}

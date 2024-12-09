@@ -1,0 +1,27 @@
+<!-- formulaire_utilisateur.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>{% if utilisateur %}Modifier{% else %}Ajouter{% endif %} un Utilisateur</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="nom" class="form-label">Nom</label>
+            <input type="text" class="form-control" id="nom" name="nom" value="{{ utilisateur.nom }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" name="email" value="{{ utilisateur.email }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="role" class="form-label">Rôle</label>
+            <select class="form-select" id="role" name="role" required>
+                <option value="hospital" {% if utilisateur.role == 'hospital' %}selected{% endif %}>Hôpital</option>
+                <option value="mairie" {% if utilisateur.role == 'mairie' %}selected{% endif %}>Mairie</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Enregistrer</button>
+    </form>
+</div>
+{% endblock %}

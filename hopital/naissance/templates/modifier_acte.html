@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="mb-4">
+    <h2>Modifier l'Acte de Naissance</h2>
+
+    <!-- Affichage du formulaire -->
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="nom_enfant">Nom de l'Enfant</label>
+            <input type="text" name="nom_enfant" class="form-control" id="nom_enfant" value="{{ naissance.nom_enfant }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="date_naissance">Date de Naissance</label>
+            <input type="date" name="date_naissance" class="form-control" id="date_naissance" value="{{ naissance.date_naissance }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="nom_pere">Nom du Père</label>
+            <input type="text" name="nom_pere" class="form-control" id="nom_pere" value="{{ naissance.nom_pere }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="nom_mere">Nom de la Mère</label>
+            <input type="text" name="nom_mere" class="form-control" id="nom_mere" value="{{ naissance.nom_mere }}" required>
+        </div>
+
+       
+
+        <div class="form-group">
+            <label for="lieu_naissance">Lieu de Naissance</label>
+            <input type="text" name="lieu_naissance" class="form-control" id="lieu_naissance" value="{{ naissance.lieu_naissance }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="etat">État de l'Acte</label>
+            <select name="etat" class="form-control" id="etat" required>
+                <option value="validé" {% if naissance.statut_validation == "Validé" %}selected{% endif %}>Validé</option>
+                <option value="En attente" {% if naissance.statut_validation == "En attente" %}selected{% endif %}>En Attente</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-4">Sauvegarder les Modifications</button>
+    </form>
+
+    <!-- Bouton pour annuler la modification et revenir à la liste des actes -->
+    <a href="{% url 'liste_actes' %}" class="btn btn-secondary mt-4">Annuler</a>
+</div>
+{% endblock %}

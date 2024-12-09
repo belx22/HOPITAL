@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">Liste des Actes de Naissance</h1>
+
+    <!-- Search bar (optionnelle) -->
+    <div class="mb-4">
+        <form method="GET" action="{% url 'liste_actes' %}">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Rechercher un acte de naissance..." name="search" value="{{ request.GET.search }}">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Acte list table -->
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Nom de l'enfant</th>
+                <th>Date de naissance</th>
+                <th>Parents</th>
+                <th>Numéro d'acte</th>
+                <th>Statut</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for acte in actes %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ acte.nom_enfant }}</td>
+                    <td>{{ acte.date_naissance }}</td>
+                    <td>{{ acte.parents }}</td>
+                    <td>{{ acte.num_acte }}</td>
+                    <td>
+                        {% if acte.statut_validation == "Validé" %}
+                            <span class="badge badge-success">Validé</span>
+                        {% else %}
+                            <span class="badge badge-warning">En attente</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'details_acte' acte.id %}" class="btn btn-info btn-sm">
+                            <i class="fas fa-eye"></i> Voir
+                        </a>
+                        <a href="{% url 'modifier_acte' acte.id %}" class="btn btn-warning btn-sm">
+                            <i class="fas fa-edit"></i> Modifier
+                        </a>
+                        {% if not acte.is_valide %}
+                            
+                            <a href="{% url 'valider_acte' acte.id %}" class="btn btn-success btn-sm"><i class="fas fa-check"></i> Valider</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Pagination (if needed) -->
+    <div class="pagination-container">
+        {% if actes.has_previous %}
+            <a href="?page=1" class="btn btn-outline-secondary btn-sm">Première</a>
+            <a href="?page={{ actes.previous_page_number }}" class="btn btn-outline-secondary btn-sm">Précédent</a>
+        {% endif %}
+        <span>Page {{ actes.number }} sur {{ actes.paginator.num_pages }}</span>
+        {% if actes.has_next %}
+            <a href="?page={{ actes.next_page_number }}" class="btn btn-outline-secondary btn-sm">Suivant</a>
+            <a href="?page={{ actes.paginator.num_pages }}" class="btn btn-outline-secondary btn-sm">Dernière</a>
+        {% endif %}
+    </div>
+</div>
+
+
+
+
+
+
+{% endblock %}

@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Section Rapport Mensuel -->
+<div class="mb-4">
+    <h2>Rapport Mensuel</h2>
+    <div class="row">
+        <!-- Statistiques du Rapport -->
+        <div class="col-md-4">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <h5 class="card-title">Total des Naissances</h5>
+                    <p class="card-text">{{ total_naissances }} Naissances ce mois-ci</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <h5 class="card-title">Actes Validés</h5>
+                    <p class="card-text">{{ actes_valides }} Actes validés</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-danger">
+                <div class="card-body">
+                    <h5 class="card-title">Dossiers en Retard</h5>
+                    <p class="card-text">{{ dossiers_en_retard }} Dossiers en retard</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Graphique Taux de Natalité -->
+    <div class="mt-4">
+        <h4>Taux de Natalité par Localité</h4>
+        <canvas id="nataliteChart" width="400" height="200"></canvas>
+    </div>
+
+    <!-- Tableau des Statistiques Détail -->
+    <div class="mt-4">
+        <h4>Détails des Naissances par Localité</h4>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Localité</th>
+                    <th>Nombre de Naissances</th>
+                    <th>Taux de Natalité</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in naissances_par_localite %}
+                <tr>
+                    <td>{{ item.lieu_naissance }}</td>
+                    <td>{{ item.nombre_naissances }}</td>
+                    <td>{{ item.taux_natalite|floatformat:2 }}%</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Bouton Générer le Rapport -->
+    <button class="btn btn-primary mt-4" onclick="window.print();">Générer le Rapport</button>
+</div>
+
+<!-- Script pour afficher le graphique -->
+<script>
+    var ctx = document.getElementById('nataliteChart').getContext('2d');
+    var nataliteChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: {{ localites|safe }},
+            datasets: [{
+                label: 'Taux de Natalité',
+                data: {{ taux_natalite|safe }},
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}
